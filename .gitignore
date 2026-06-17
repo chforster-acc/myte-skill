@@ -1,0 +1,20 @@
+# Personal time report PDFs (sensitive data)
+timereports/*.pdf
+
+# Windows Zone.Identifier metadata
+*:Zone.Identifier
+
+# Python
+__pycache__/
+*.pyc
+
+# Playwright MCP local config
+.playwright-mcp/
+
+# Claude Code local settings
+.claude/settings.local.json
+timereports/.claude/
+
+# OS
+.DS_Store
+Thumbs.db
