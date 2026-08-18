@@ -51,6 +51,19 @@ Der Skill unter `.claude/commands/myte.md` automatisiert den kompletten Workflow
 
 Voraussetzung: [Playwright MCP Server](https://github.com/anthropics/playwright-mcp) konfiguriert.
 
+### Global verfügbar machen
+
+Damit `/myte` in jedem Workspace zur Verfügung steht, die Datei aus dem Checkout nach
+`~/.claude/commands/` **verlinken** — nicht kopieren. So bleibt der Checkout die einzige
+Wahrheit und ein `git pull` wirkt sofort; eine Kopie müsste man nach jeder Änderung
+nachziehen, und welche Fassung `/myte` ausführt, sieht man nicht. Aus dem Wurzelverzeichnis
+des Repos:
+
+```bash
+mkdir -p ~/.claude/commands
+ln -sfn "$PWD/.claude/commands/myte.md" ~/.claude/commands/myte.md
+```
+
 ## Klassifizierungsregeln
 
 | Bedingung | Charge Code |
