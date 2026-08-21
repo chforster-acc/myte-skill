@@ -130,9 +130,22 @@ Ergibt z.B.:
 
 Alle Codes die eingetragen werden sollen mit der `rows`-Map abgleichen. Falls ein Code fehlt:
 
-1. Leere Zeile klicken: `document.querySelector('button[aria-label*="Empty"]').click()`
+1. Leere Zeile klicken — die konkrete Zeile adressieren, nicht die erste beste:
+   `button[aria-label="Charge Codes Assignment {N} Empty "]`
+   (Kandidaten vorher auflisten: alle `button[aria-label*="Empty"]` mit ihrem `aria-label`.)
 2. Zeichenweise eintippen (`slowly: true`): `browser_type` auf `input[placeholder="Filter..."]`
-3. Eintrag auswählen: `document.querySelector('div.ag-row').click()`
+3. Eintrag auswählen — **nicht** `div.ag-row` blind nehmen: Der Selektor matcht auch die
+   Timesheet-Grid-Zeilen (Work Location, bestehende Charge Codes, Total hours …), und
+   `querySelector` liefert dann die falsche Zeile. Stattdessen die Treffer erst auflisten
+   und gezielt per Text klicken:
+   ```javascript
+   // Treffer prüfen — genau eine Zeile sollte den Code enthalten
+   Array.from(document.querySelectorAll('div.ag-row')).map(r => r.textContent.replace(/\s+/g,' ').trim())
+   ```
+   Dann `browser_click` mit `div.ag-row:has-text("<eindeutiger Text des Treffers>")`,
+   z.B. `div.ag-row:has-text("Overtime Vacation Taken")` für 513B01.
+4. Nach dem Hinzufügen steht die neue Zeile im Edit-Modus (die erste Zelle hat dann keine
+   `hours-cell-*` id) → `browser_press_key` `Escape`, danach Mapping erneut auslesen.
 
 **Niemals auf bestehenden Charge Code klicken — überschreibt ihn!**
 
