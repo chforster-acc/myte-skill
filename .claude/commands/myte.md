@@ -86,6 +86,8 @@ Datum    Text            Code          Stunden  Status
 19.05.   Pfingstmontag   515B01          7.70h  – skip (Feiertag)
 ```
 
+Vor der Ausgabe die **Summenregel für Tage mit 513B01** anwenden (siehe Klassifizierungsregeln): Tagessumme = 7.70h, Rundungsdifferenzen werden bei 513B01 korrigiert.
+
 Dann fragen: „Soll ich das so in MyTE eintragen?"
 
 ### Schritt 7: Browser öffnen + MyTE navigieren
@@ -203,6 +205,8 @@ python3 timereports/preview.py [MM_YYYY] [periode]
 
 **Whitelist bekannter Arbeitstexte** (alles andere = Feiertag):
 `teleworking`, `krankheit`, `gleitzeit lfd.`, `dienstreise`, `mitfahrer`, `erholungsurlaub`, `arztbesuch`, `` (leer = Office)
+
+**Summenregel für Tage mit 513B01** (nicht im Parser, Prüfung in Schritt 6): Wird an einem Tag 513B01 eingetragen, muss die Tagessumme aller Einträge **exakt 7.70h** ergeben — nicht mehr und nicht weniger. Das PDF rundet Ist und Glz unabhängig voneinander, dadurch entstehen Abweichungen von ±0.01h (Beispiel 16.09.2026: Ist 6.89 + Glz 0.82 = 7.71). Korrektur: **513B01 = 7.70 − übrige Einträge des Tages** (im Beispiel 0.81), die übrigen Einträge bleiben unverändert. In der Übersicht (Schritt 6) die korrigierte Zahl zeigen und den PDF-Wert vermerken. Tage ohne 513B01 sind davon nicht betroffen (dort sind echte Überstunden wie 7.71h möglich).
 
 ---
 
