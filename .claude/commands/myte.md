@@ -167,11 +167,25 @@ document.getElementById('hours-cell-X-Y')?.textContent.trim()
 
 **Pro Zelle einzeln** — niemals Tab (springt in andere Zeilen!):
 1. `browser_click` auf `#hours-cell-{X}-{Y}`
-2. Ziffern einzeln per `browser_press_key` tippen (z.B. "8", ".", "1", "5" für 8.15h)
+2. Wert per `browser_type` in `.ag-cell-inline-editing input` tippen, mit `slowly: true` und
+   `submit: true` (Alternative: Ziffern einzeln per `browser_press_key`, z.B. "8", ".", "1", "5")
+
+**Zelle leeren** (nur bei bewusster Korrektur/Umbuchung, siehe unten): Zelle anklicken, dann
+`browser_type` mit leerem Text und `submit: true`.
 
 ### Schritt 12: Speichern + Verifizieren
 
-`browser_click` auf Save-Button, dann Screenshot zeigen.
+`browser_click` auf Save-Button, dann **echt neu laden** und erst dann prüfen + Screenshot zeigen.
+
+Erneutes `browser_navigate` auf dieselbe Hash-URL lädt die Daten **nicht** neu — man sieht dann nur
+den clientseitigen Stand. Für echtes Neuladen erst `about:blank`, dann zurück zur Perioden-URL:
+`#/time?periodEnd=<base64("MM-DD-YYYY"), url-encoded>&viewMode=UmVjb3Jk`
+(z.B. 10/31/2026 → `MTAtMzEtMjAyNg%253D%253D`).
+
+Danach den User informieren — **Submit macht der User selbst**:
+- Neue Periode (Status „Draft") → Button **„Submit"**
+- Bereits eingereichte Periode, nachträglich geändert (Status „Draft Adjustment") → Button
+  **„Complete Adjustment"**
 
 ---
 
@@ -223,6 +237,13 @@ python3 timereports/preview.py [MM_YYYY] [periode]
 - **Save → Status "Draft"**: Korrekt, Submit ist separat
 - **MFA-Dialog**: Screenshot zeigen, User manuell authentifizieren lassen, dann warten
 - **Fehlende PDF-Tage**: Melden aber nicht abbrechen (letzter Arbeitstag, Buchungsfehler etc.)
+- **Aufteilung auf mehrere Charge Codes**: Arbeitszeit eines Tages (`Ist`, ohne 513B01) wird nach
+  vorgegebenem Verhältnis aufgeteilt. Der größere Anteil bekommt einen Wert in 0.25h-Schritten,
+  der kleinere den Rest (bei 50:50 egal welcher). Verhältnis kommt vom User — nicht raten.
+- **Umbuchung bestehender Perioden**: Ausnahme von Schritt 10 — nur auf ausdrücklichen Wunsch.
+  Vorher prüfen, dass der alte Code je Tag der Summe der neuen Codes entspricht (Abweichungen zum
+  PDF melden und fragen), dann alte Zelle leeren und neue Werte eintragen. Pro Periode speichern,
+  User informieren, auf dessen „erledigt" warten, dann nächste Periode.
 
 ---
 
