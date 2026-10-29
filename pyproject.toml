@@ -1,0 +1,16 @@
+[project]
+name = "myte-skill"
+version = "0.1.0"
+description = "Parse Accenture time report PDFs and enter the hours into MyTE"
+requires-python = ">=3.12"
+dependencies = ["pdfminer.six"]
+
+[dependency-groups]
+dev = ["pytest"]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["timereports"]

@@ -24,12 +24,9 @@ bei Regeländerungen mitziehen.
 - **Playwright MCP Server** muss konfiguriert sein. Der Skill nutzt dessen Tools (`browser_navigate`,
   `browser_evaluate`, `browser_type`, …) — nicht Claude in Chrome. Neue Browser-Schritte ebenfalls
   mit Playwright-Tools formulieren.
-- Python mit `pdfminer.six` (`requirements.txt`). Lokal ist es nicht installiert; der Skill ruft
-  aber `python3` direkt auf und scheitert dann. Manuell per Docker:
-  ```bash
-  docker run --rm -v "$PWD":/app -w /app python:3.12-slim \
-    sh -c "pip install -q --root-user-action=ignore -r requirements.txt && python timereports/preview.py 10_2026 1"
-  ```
+- **uv** verwaltet Python und Abhängigkeiten (`pyproject.toml`, `uv.lock`). Skripte immer über
+  `uv run python …` starten, nie über ein nacktes `python3` — `pdfminer.six` ist nur im uv-venv
+  installiert. Einmalig `uv sync`.
 
 ## Zeitnachweis-PDFs
 
@@ -51,6 +48,6 @@ bei Regeländerungen mitziehen.
 - Skill, README und diese Datei sind bewusst deutsch (Prompts für eine deutsche Konversation);
   Commit-Messages englisch.
 - Kein Feature-Branch: direkt auf `main` committen (Ausnahme zur globalen Branch-Regel).
-- Tests gibt es noch keine. Erster Kandidat ist die Klassifizierung in `parse_timereport.py`
-  (`classify_entries`, `arzt_hours`); Teststruktur vor Code-Änderungen gemeinsam mit dem User
-  aufsetzen.
+- Tests: `uv run pytest` (`tests/`, pytest findet `timereports/` über `pythonpath` in
+  `pyproject.toml`). Nur synthetische Tagesdaten — echte PDFs gehören nicht in Tests oder Fixtures.
+  Änderungen an der Klassifizierung oder Arzt-Berechnung brauchen einen Test.

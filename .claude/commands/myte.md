@@ -31,24 +31,24 @@ Das passende PDF liegt unter `timereports/MM_YYYY.pdf` (z.B. `05_2026.pdf` für 
 
 Heutiges Datum auslesen, Periode ableiten, passendes PDF identifizieren:
 ```bash
-python3 -c "
+uv run python -c "
 from datetime import date
 t = date.today()
 p1 = t.day <= 15
 print(f'Heute: {t}, Periode: {\"1\" if p1 else \"2\"}')
 print(f'PDF: timereports/{t.month:02d}_{t.year}.pdf')
-print(f'Tage: {t.day if not p1 else 1} bis {15 if p1 else t.day}')  # bis heute!
+print(f'Tage: {1 if p1 else 16} bis {t.day}')  # bis heute!
 "
 ```
 
 ### Schritt 2: PDF parsen + auf aktuelle Periode filtern
 
 ```bash
-python3 timereports/preview.py MM_YYYY [periode]
-# z.B.: python3 timereports/preview.py 05_2026 2
+uv run python timereports/preview.py MM_YYYY [periode]
+# z.B.: uv run python timereports/preview.py 05_2026 2
 ```
 
-Aus dem JSON **nur Einträge behalten**, deren `date` ("DD.MM.") in den Tagen der aktuellen Periode liegt (Periode 1: 01–15, Periode 2: 16–EOM). Zukünftige Tage (nach heute) ignorieren — deren Daten sind noch nicht im PDF.
+Aus der Ausgabe **nur Einträge behalten**, deren `date` ("DD.MM.") in den Tagen der aktuellen Periode liegt (Periode 1: 01–15, Periode 2: 16–EOM). Zukünftige Tage (nach heute) ignorieren — deren Daten sind noch nicht im PDF.
 
 ### Schritt 3: Charge Code erfragen (falls nicht in $ARGUMENTS)
 
@@ -192,7 +192,7 @@ Danach den User informieren — **Submit macht der User selbst**:
 ## Ablauf — Preview-Modus
 
 ```bash
-python3 timereports/preview.py [MM_YYYY] [periode]
+uv run python timereports/preview.py [MM_YYYY] [periode]
 ```
 
 - Ohne Argumente: aktuelle Periode des laufenden Monats

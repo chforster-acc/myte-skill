@@ -11,8 +11,10 @@ Parst Accenture Zeitnachweis-PDFs und trägt die Arbeitszeiten automatisch in [M
 
 ## Setup
 
+Voraussetzung: [uv](https://docs.astral.sh/uv/).
+
 ```bash
-pip install -r requirements.txt
+uv sync
 ```
 
 ## Standalone-Nutzung
@@ -21,23 +23,29 @@ pip install -r requirements.txt
 
 ```bash
 # Aktuelle Periode
-python3 timereports/preview.py
+uv run python timereports/preview.py
 
 # Bestimmter Monat
-python3 timereports/preview.py 05_2026
+uv run python timereports/preview.py 05_2026
 
 # Bestimmte Periode
-python3 timereports/preview.py 05_2026 2
+uv run python timereports/preview.py 05_2026 2
 ```
 
 ### Parser
 
 ```bash
-python3 timereports/parse_timereport.py timereports/05_2026.pdf
-python3 timereports/parse_timereport.py timereports/05_2026.pdf --json
+uv run python timereports/parse_timereport.py timereports/05_2026.pdf
+uv run python timereports/parse_timereport.py timereports/05_2026.pdf --json
 ```
 
 PDFs im Format `MM_YYYY.pdf` unter `timereports/` ablegen (werden nicht ins Repo committed).
+
+## Tests
+
+```bash
+uv run pytest
+```
 
 ## Claude Code Skill
 
