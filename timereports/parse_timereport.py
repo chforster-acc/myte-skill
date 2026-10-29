@@ -56,7 +56,14 @@ def arzt_hours(beginn_str, ende_str):
     """Berechne Arzt-Stunden als Schnittmenge von [beginn, ende] mit ARZT_WINDOWS."""
     b = parse_time_h(beginn_str)
     e = parse_time_h(ende_str)
-    if b is None or e is None or e <= b:
+    if b is None or e is None:
+        return 0.0
+    return arzt_overlap(b, e)
+
+
+def arzt_overlap(b, e):
+    """Schnittmenge von [b, e] (Dezimalstunden) mit ARZT_WINDOWS."""
+    if e <= b:
         return 0.0
     total = 0.0
     for w_start, w_end in ARZT_WINDOWS:
@@ -227,10 +234,7 @@ def calc_arzt_hours_for_day(day):
             if next_beginn_h is not None:
                 ende_h = min(ende_h, next_beginn_h)
 
-        total_arzt += arzt_hours(
-            f"{int(beginn_h):02d}:{int((beginn_h % 1)*60):02d}",
-            f"{int(ende_h):02d}:{int((ende_h % 1)*60):02d}"
-        )
+        total_arzt += arzt_overlap(beginn_h, ende_h)
 
     return round(total_arzt, 2)
 
