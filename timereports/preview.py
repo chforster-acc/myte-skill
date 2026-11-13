@@ -8,6 +8,18 @@ from datetime import date
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from parse_timereport import parse_timereport, classify_entries
 
+# MyTE does not allow more than 10h per day without approval.
+DAILY_LIMIT_H = 10.0
+
+
+def days_over_limit(entries, limit=DAILY_LIMIT_H):
+    """Return {date: total} for days whose entered hours exceed the daily limit."""
+    totals = {}
+    for e in entries:
+        if e['action'] == 'enter':
+            totals[e['date']] = totals.get(e['date'], 0.0) + e['hours']
+    return {d: round(t, 2) for d, t in totals.items() if round(t, 2) > limit}
+
 
 def preview(pdf_path, year, month, show_both_periods=True, period_filter=None):
     days = parse_timereport(pdf_path)
@@ -41,6 +53,11 @@ def preview(pdf_path, year, month, show_both_periods=True, period_filter=None):
                 marker = '⚠ UNKLAR'
             code = e['charge_code'] if e['charge_code'] != 'USER_DEFINED' else '[User-Code]'
             print(f"{e['date']:<8} {e['text']:<22} {code:<12} {e['hours']:>5.2f}h  {marker}")
+
+        over = days_over_limit(p_entries)
+        for d, total in over.items():
+            print(f"  ⚠ {d} Tagessumme {total:.2f}h > {DAILY_LIMIT_H:.0f}h "
+                  f"— nur mit Freigabe, sonst manuell kürzen")
 
         p_missing = [d for d in missing if d in p_range]
         if p_missing:

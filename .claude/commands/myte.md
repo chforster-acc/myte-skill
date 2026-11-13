@@ -88,6 +88,15 @@ Datum    Text            Code          Stunden  Status
 
 Vor der Ausgabe die **Summenregel für Tage mit 513B01** anwenden (siehe Klassifizierungsregeln): Tagessumme = 7.70h, Rundungsdifferenzen werden bei 513B01 korrigiert.
 
+**10h-Grenze**: MyTE erlaubt ohne Freigabe höchstens **10.00h pro Tag** (Summe aller Einträge inkl.
+706B02). `preview.py` markiert solche Tage mit `⚠ … Tagessumme … > 10h`. Nicht automatisch kürzen —
+ob eine Freigabe vorliegt, weiß nur der User. Den Tag in der Übersicht deutlich markieren und darauf
+hinweisen, dass er manuell nachgebessert werden muss (z.B. kleineren Projektanteil kürzen), sofern
+keine Freigabe vorliegt. Das gilt auch für Tage, die erst in Schritt 5 geklärt wurden (`preview.py`
+zählt unklare Einträge nicht mit):
+
+> „⚠ 10.11. Tagessumme 10.11h > 10h — nur mit Freigabe, sonst manuell kürzen"
+
 Dann fragen: „Soll ich das so in MyTE eintragen?"
 
 ### Schritt 7: Browser öffnen + MyTE navigieren
